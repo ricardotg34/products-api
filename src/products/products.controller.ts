@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Post, Body, UsePipes, ValidationPipe, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UsePipes, ValidationPipe, Delete, HttpCode, Put } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/Product.schema';
 import { CreateProductDTO } from './dto/create-product.dto';
+import { UpdateProductDTO } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -23,6 +24,15 @@ export class ProductsController {
         @Body() createProductDTO: CreateProductDTO
     ): Promise<Product>{
         return await this.productsService.createProduct(createProductDTO);
+    }
+
+    @Put('/:id')
+    @UsePipes(ValidationPipe)
+    async updateProduct(
+        @Param('id') id: string,
+        @Body() updateProductDTO: UpdateProductDTO
+    ): Promise<Product>{
+        return await this.productsService.updateProduct(updateProductDTO, id);
     }
 
     @Delete('/:id')

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schemas/Product.schema';
 import { Model } from 'mongoose';
 import { CreateProductDTO } from './dto/create-product.dto';
+import { UpdateProductDTO } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -29,9 +30,24 @@ export class ProductsService {
     async createProduct(createProductDTO: CreateProductDTO): Promise<Product>{
         const product = new this.productModel(createProductDTO);
         try {
-            return product.save();
+            return await product.save();
         } catch (error) {
             throw new InternalServerErrorException();
+        }
+    }
+
+    async updateProduct(updateProductDTO: UpdateProductDTO, id: string): Promise<Product>{
+        try {
+            console.log(updateProductDTO);
+            const product = await this.productModel.findByIdAndUpdate(id, updateProductDTO, {new: true}).exec();
+            if(!product){
+                throw new NotFoundException(`El producto con id: ${id} no se encontró.`);
+            }
+            return product;
+        } catch (error) {
+            if(!(error instanceof NotFoundException))
+                throw new InternalServerErrorException(`El id: ${id} no es válido.`);
+            else throw error;
         }
     }
 
