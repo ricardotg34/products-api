@@ -11,6 +11,9 @@ export class Product extends Document {
 
   @Prop({default: true})
   available: boolean;
+
+  @Prop()
+  imagePath: string
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

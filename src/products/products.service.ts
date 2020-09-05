@@ -38,7 +38,6 @@ export class ProductsService {
 
     async updateProduct(updateProductDTO: UpdateProductDTO, id: string): Promise<Product>{
         try {
-            console.log(updateProductDTO);
             const product = await this.productModel.findByIdAndUpdate(id, updateProductDTO, {new: true}).exec();
             if(!product){
                 throw new NotFoundException(`El producto con id: ${id} no se encontró.`);
@@ -57,6 +56,20 @@ export class ProductsService {
             await product.remove();
         } catch (error) {
             throw new InternalServerErrorException();
+        }
+    }
+
+    async setImagePath(path: string, id: string): Promise<Product>{
+        try {
+            const product = await this.productModel.findByIdAndUpdate(id, {imagePath: path}, {new: true}).exec();
+            if(!product){
+                throw new NotFoundException(`El producto con id: ${id} no se encontró.`);
+            }
+            return product;
+        } catch (error) {
+            if(!(error instanceof NotFoundException))
+                throw new InternalServerErrorException(`El id: ${id} no es válido.`);
+            else throw error;
         }
     }
 }
