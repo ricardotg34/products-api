@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# product images
+/static
+
 # Logs
 logs
 *.log

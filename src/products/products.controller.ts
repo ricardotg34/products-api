@@ -54,7 +54,6 @@ export class ProductsController {
         destination: './static',
         filename: (req, file, cb) => {
           const fileSplit = file.originalname.split('.');
-
           cb(null, `${fileSplit[0]}-${new Date().getMilliseconds()}.${fileSplit[1]}`);
         },
       }),
@@ -62,6 +61,7 @@ export class ProductsController {
   ))
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async uploadedFile(@UploadedFile() file, @Param('id') id: string): Promise<Product> {
+    console.log(file);
     return await this.productsService.setImagePath(file.filename, id) ;
   }
 
