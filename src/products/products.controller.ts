@@ -9,21 +9,23 @@ import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('products')
-@UseGuards(AuthGuard())
 export class ProductsController {
   constructor(private productsService: ProductsService) { }
 
   @Get()
+  @UseGuards(AuthGuard())
   async getProducts(): Promise<Product[]> {
     return await this.productsService.getAllProducts();
   }
 
   @Get('/:id')
+  @UseGuards(AuthGuard())
   async getProductById(@Param('id') id: string): Promise<Product> {
     return await this.productsService.getProductById(id);
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   async createProduct(
     @Body() createProductDTO: CreateProductDTO
@@ -32,6 +34,7 @@ export class ProductsController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   async updateProduct(
     @Param('id') id: string,
@@ -42,6 +45,7 @@ export class ProductsController {
 
   @Delete('/:id')
   @HttpCode(204)
+  @UseGuards(AuthGuard())
   async deleteProdcut(
     @Param('id') id: string
   ): Promise<void> {
@@ -61,6 +65,7 @@ export class ProductsController {
       }),
     }
   ))
+  @UseGuards(AuthGuard())
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async uploadedFile(@UploadedFile() file, @Param('id') id: string): Promise<Product> {
     console.log(file);
